@@ -10,12 +10,14 @@ import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/orders';
 import authReducer from './store/reducers/auth';
 import ShopNavigator from './navigation/ShopNavigator';
+import placesReducer from './store/reducers/places-reducer';
 
 const rootReducer = combineReducers({
   products: productReducer,
   cart: cartReducer,
   orders: ordersReducer,
-  auth: authReducer
+  auth: authReducer,
+  places: placesReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

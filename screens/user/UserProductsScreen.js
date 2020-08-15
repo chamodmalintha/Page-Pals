@@ -41,19 +41,20 @@ const UserProductsScreen = props => {
             renderItem={itemData =>                 //render item get the item data here and return a product item of every data.
                 <ProductItem                        //product item takes some details. (title,price, image, etc..)
                      image={itemData.item.imageUrl}
+                     address={itemData.item.address}
                      title={itemData.item.title}  
                      price={itemData.item.price}       
                      onSelect={() => {
                         editProductHandler(itemData.item.id);
                      }}     
                 >
-                    <Button 
+                    {/* <Button 
                         color={Colors.primary} 
                         title="Edit" 
                         onPress={() => {
                             editProductHandler(itemData.item.id);
                         }}
-                    />
+                    /> */}
                     <Button 
                         color={Colors.primary} 
                         title="Delete" 

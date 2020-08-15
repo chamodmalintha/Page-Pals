@@ -102,7 +102,7 @@ const AuthScreen = props => {
     [dispatchFormState]
   );
 
-  const image = { uri: "https://picsum.photos/200/319" };
+  const image = { uri: "https://firebasestorage.googleapis.com/v0/b/page-pals-new.appspot.com/o/background%2Fbackground.jpg?alt=media&token=68c02232-5774-453d-aa25-799ca8140f2a" };
 
   return (
     <KeyboardAvoidingView

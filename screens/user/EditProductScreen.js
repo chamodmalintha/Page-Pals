@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import HeaderButton from '../../components/UI/HeaderButton';
 import * as productsActions from '../../store/actions/products';
 import LocationPicker from '../../components/shop/LocationPicker';
+import Colors from '../../constants/Colors'
 
 const EditProductScreen = props => {
 
@@ -15,31 +16,42 @@ const EditProductScreen = props => {
 
     const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
     const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.imageUrl : '');
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState(editedProduct ? editedProduct.price : '');
     const [description, setDescription] = useState(editedProduct ? editedProduct.description : '');
+    const [selectedLocation, setSelectedLocation] = useState();
 
     const submitHandler = useCallback(() => {
         if(editedProduct) {
             dispatch(
-                productsActions.updateProduct(prodId, title, description, imageUrl)
+                productsActions.updateProduct(prodId, title, description, imageUrl, price, selectedLocation)
             );
         }
         else {
             dispatch(
-                productsActions.createProduct(title, description, imageUrl, +price)
+                productsActions.createProduct(title, description, imageUrl, price, selectedLocation)
             );
 
         }
         props.navigation.goBack();
-    },[dispatch, prodId, title, description, imageUrl, price]);
+    },[dispatch, prodId, title, description, imageUrl, price, selectedLocation]);
 
     useEffect(() => {
         props.navigation.setParams({ submit: submitHandler });
     }, [submitHandler]);
 
-    const editProductHandler = () => {
-        props.navigation.navigate('Map');
-    };
+    const locationPickedHandler = useCallback(location => {
+        console.log(location);
+        setSelectedLocation(location);
+    }, []);
+
+    const savePlaceHandler = () => {
+        // dispatch(placesActions.addPlace(titleValue, selectedImage));
+        props.navigation.goBack();
+      };
+
+    // const editProductHandler = () => {
+    //     props.navigation.navigate('Map');
+    // };
 
     return (
         <ScrollView>
@@ -59,14 +71,13 @@ const EditProductScreen = props => {
                         onChangeText={text => setImageUrl(text)} 
                     />
                 </View>
-                {editedProduct ? null : (<View style={styles.formControl}>
-                    <Text style={styles.label}>Price</Text>
+                <View style={styles.formControl}>
+                    <Text style={styles.label}>Contact Details</Text>
                     <TextInput style={styles.input} 
                         value={price} 
                         onChangeText={text => setPrice(text)} 
                     />
                 </View>
-                )}
                 
                 <View style={styles.formControl}>
                     <Text style={styles.label}>Description</Text>
@@ -74,17 +85,18 @@ const EditProductScreen = props => {
                         value={description} 
                         onChangeText={text => setDescription(text)} 
                     />
-                    
-                {/* <Button 
-                        title="Map" 
-                        onPress={() => {
-                            editProductHandler();
-                        }}
-                    /> */}
                 </View>
 
                 <View>
-                    <LocationPicker />
+                    <LocationPicker 
+                        navigation={props.navigation} 
+                        onLocationPicked={locationPickedHandler} 
+                    />
+                    {/* <Button
+                        title="Save Place"
+                        color={Colors.primary}
+                        onPress={savePlaceHandler}
+                    /> */}
                 </View>
                 
                 

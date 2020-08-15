@@ -1,4 +1,5 @@
 import Product from '../../models/product';
+import ENV from '../../env';
 
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const CREATE_PRODUCT = 'CREATE_PRODUCT';
@@ -11,7 +12,7 @@ export const fetchProducts = () => {
     const userId = getState().auth.userId;
     try {
       const response = await fetch(
-        'https://shop-app-38e8f.firebaseio.com/products.json'
+        'https://page-pals-new.firebaseio.com/products.json'
       );
 
       if (!response.ok) {
@@ -29,7 +30,8 @@ export const fetchProducts = () => {
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
-            resData[key].price
+            resData[key].price,
+            resData[key].address
           )
         );
       }
@@ -48,7 +50,7 @@ export const deleteProduct = productId => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     await fetch(
-      `https://shop-app-38e8f.firebaseio.com/products/${productId}.json?auth=${token}`,
+      `https://page-pals-new.firebaseio.com/products/${productId}.json?auth=${token}`,
       {
         method: 'DELETE'
       }
@@ -57,13 +59,29 @@ export const deleteProduct = productId => {
   };
 };
 
-export const createProduct = (title, description, imageUrl, price) => {
+export const createProduct = (title, description, imageUrl, price, location) => {
   return async (dispatch, getState) => {
+
+    const responseLocation = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat},${location.lng}&key=${ENV.googleApiKey}`);
+
+    if(!responseLocation.ok) {
+      throw new Error('something went wrong!');
+;    }
+    const resDataLocation = await responseLocation.json();
+      console.log(resDataLocation);
+
+      if(!resDataLocation.results) {
+        throw new Error('Something went wrong');
+      }
+
+      const address = resDataLocation.results[0].formatted_address;
+
     // any async code you want!
     const token = getState().auth.token;
     const userId = getState().auth.userId;
     const response = await fetch(
-      `https://shop-app-38e8f.firebaseio.com/products.json?auth=${token}`,
+      // `https://shop-app-38e8f.firebaseio.com/products.json?auth=${token}`,
+      `https://page-pals-new.firebaseio.com/products.json?auth=${token}`,
       {
         method: 'POST',
         headers: {
@@ -74,7 +92,9 @@ export const createProduct = (title, description, imageUrl, price) => {
           description,
           imageUrl,
           price,
+          address,
           ownerId: userId
+          // ownerId: 'u1'
         })
       }
     );
@@ -89,17 +109,35 @@ export const createProduct = (title, description, imageUrl, price) => {
         description,
         imageUrl,
         price,
+        address,
         ownerId: userId
       }
     });
   };
 };
 
-export const updateProduct = (id, title, description, imageUrl) => {
+export const updateProduct = (id, title, description, imageUrl, price, location) => {
   return async (dispatch, getState) => {
+
+    const responseLocation = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat},${location.lng}&key=${ENV.googleApiKey}`);
+
+    if(!responseLocation.ok) {
+      throw new Error('something went wrong!');
+;    }
+    const resDataLocation = await responseLocation.json();
+      console.log(resDataLocation);
+
+      if(!resDataLocation.results) {
+        throw new Error('Something went wrong');
+      }
+
+      const address = resDataLocation.results[0].formatted_address;
+
     const token = getState().auth.token;
     const response = await fetch(
-      `https://shop-app-38e8f.firebaseio.com/products/${id}.json?auth=${token}`,
+      // `https://shop-app-38e8f.firebaseio.com/products/${id}.json?auth=${token}`,
+      `https://page-pals-new.firebaseio.com/products/${id}.json?auth=${token}`,
+
       {
         method: 'PATCH',
         headers: {
@@ -108,7 +146,9 @@ export const updateProduct = (id, title, description, imageUrl) => {
         body: JSON.stringify({
           title,
           description,
-          imageUrl
+          imageUrl,
+          address,
+          price
         })
       }
     );
@@ -123,7 +163,9 @@ export const updateProduct = (id, title, description, imageUrl) => {
       productData: {
         title,
         description,
-        imageUrl
+        imageUrl,
+        address,
+        price
       }
     });
   };

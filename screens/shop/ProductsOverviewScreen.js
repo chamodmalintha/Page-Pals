@@ -100,8 +100,8 @@ const ProductsOverviewScreen = props => {
         <ProductItem
           image={itemData.item.imageUrl}
           title={itemData.item.title}
-          address="Homagama"
-          // price={itemData.item.price}
+          address={itemData.item.address}
+          price={itemData.item.price}
           onSelect={() => {
             selectItemHandler(itemData.item.id, itemData.item.title);
           }}
@@ -153,7 +153,7 @@ ProductsOverviewScreen.navigationOptions = navData => {
         /> */}
         <Text style={styles.text}
         onPress={() => {
-          navData.navigation.navigate('Logout');
+          navData.navigation.navigate('Auth');
         }}>
           Logout
         </Text>
@@ -162,7 +162,7 @@ ProductsOverviewScreen.navigationOptions = navData => {
           title="Logout"
           iconName={Platform.OS === 'android' ? 'md-log-out' : 'ios-log-out'}
           onPress={() => {
-            navData.navigation.navigate('Logout');
+            navData.navigation.navigate('Auth');
           }}
         >
         </Item>
