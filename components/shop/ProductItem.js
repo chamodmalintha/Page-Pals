@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 5,
         marginLeft: 250,
-        marginTop:-20,
+        marginTop:-15,
         marginBottom:15
     },
     address: {

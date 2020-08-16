@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer'; 
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductsDetailScreen from '../screens/shop/ProductsDetailScreen';
@@ -136,6 +137,16 @@ const ShopNavigator = createDrawerNavigator(
                   props.navigation.navigate('Auth');
                 }}
               /> */}
+              <Item
+                title="Logout"
+                iconName={Platform.OS === 'android' ? 'md-log-out' : 'ios-log-out'}
+                onPress={() => {
+                  dispatch(authActions.logout());
+                  props.navigation.navigate('Auth');
+                }}
+              >
+              </Item>
+
             </SafeAreaView>
           </View>
         );
